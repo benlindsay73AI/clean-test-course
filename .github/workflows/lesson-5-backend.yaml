@@ -25,14 +25,25 @@ jobs:
           coverage run -m --source=./hangry_api pytest
           coverage report
   deploy:
-    needs: [unit_test]
+    needs: [unit_test, security_test]
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@v4
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
       - name: '**PLACEHOLDER** Deploy to Elastic Beanstalk'
         run: echo Placeholder for Deployment
+  
+  security_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run pycharm security test
+        uses: tonybaloney/pycharm-security@1.25.1
